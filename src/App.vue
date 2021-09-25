@@ -1,28 +1,67 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <vuetify-datatable
+      :posts="posts"
+      :headers="headers"
+      sort-by="ID"
+      @deleteItem="deleteItem"
+      @editItem="editItem"
+    ></vuetify-datatable>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import VuetifyDatatable from "./components/VuetifyDatatable";
+// import Dialog from "./components/Dialog";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
-</script>
+    VuetifyDatatable,
+    // Dialog,
+  },
+  data: () => ({
+    posts: [
+      {
+        id: 1,
+        name: "Корпус 1",
+        parking_available: true,
+        actions: "",
+      },
+      {
+        id: 2,
+        name: "Корпус 2",
+        parking_available: false,
+        actions: "",
+      },
+      {
+        id: 3,
+        name: "Корпус 3",
+        parking_available: false,
+        actions: "",
+      },
+    ],
+    headers: [
+      { text: "ID", value: "id", sortable: false, editable: false },
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+      { text: "Name", value: "name", sortable: false, editable: true },
+
+      {
+        text: "Parking Available",
+        value: "parking_available",
+        sortable: false,
+         editable: true
+      },
+      { text: "Actions", value: "actions", sortable: false, editable: true },
+    ],
+  }),
+  methods: {
+    deleteItem(id) {
+      this.posts = this.posts.filter((p) => p.id !== id);
+    },
+    editItem(newItem) {
+      console.log(newItem);
+      this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
+    },
+  },
+};
+</script>
