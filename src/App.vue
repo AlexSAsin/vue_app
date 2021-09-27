@@ -24,34 +24,63 @@ export default {
       {
         id: 1,
         name: "Корпус 1",
-        parking_available: true,
+        parkingAvailable: true,
+        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
         actions: "",
       },
       {
         id: 2,
         name: "Корпус 2",
-        parking_available: false,
+        parkingAvailable: false,
+        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
         actions: "",
       },
       {
         id: 3,
         name: "Корпус 3",
-        parking_available: false,
+        parkingAvailable: false,
+        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
         actions: "",
       },
     ],
     headers: [
-      { text: "ID", value: "id", sortable: false, editable: false },
+      {
+        text: "ID",
+        value: "id",
+        sortable: false,
+        editable: false,
+        type: Number,
+      },
 
-      { text: "Name", value: "name", sortable: false, editable: true },
+      {
+        text: "Name",
+        value: "name",
+        sortable: false,
+        editable: true,
+        type: String,
+      },
 
       {
         text: "Parking Available",
-        value: "parking_available",
-        sortable: false,
-         editable: true
+        value: "parkingAvailable",
+        sortable: true,
+        editable: true,
+        type: Boolean,
       },
-      { text: "Actions", value: "actions", sortable: false, editable: true },
+      {
+        text: "In Operation Date",
+        value: "inOperationDate",
+        sortable: false,
+        editable: true,
+        type: Date,
+      },
+      {
+        text: "Actions",
+        value: "actions",
+        sortable: false,
+        editable: true,
+        type: String,
+      },
     ],
   }),
   methods: {
@@ -59,9 +88,16 @@ export default {
       this.posts = this.posts.filter((p) => p.id !== id);
     },
     editItem(newItem) {
-      console.log(newItem);
+      console.log(newItem)
       this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
     },
   },
 };
 </script>
+
+
+<style scoped>
+#app {
+  background-color: #eee;
+}
+</style>

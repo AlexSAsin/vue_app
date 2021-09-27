@@ -2,31 +2,80 @@
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on, attrs }">
       <div class="tt" v-bind="attrs" v-on="on">
-        <slot> </slot>
+        <slot></slot>
       </div>
     </template>
     <v-card>
       <v-card-title>
-        <span class="text-h5">User Profile</span>
+        <span class="text-h5">Edit</span>
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-row>
-            <!-- @TODO: сделать эти поля с помощью цикла от headers -->
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Legal first name*" required></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <!-- @NOTE: прочитай v-model -->
-              <v-text-field
-                label="Legal middle name"
-                hint="example of helper text only on focus"
-                v-model="editedItem.name"
-              ></v-text-field>
-            </v-col>
-          </v-row>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-row>
+              <v-col
+                v-for="(item, ind) in headers.filter(
+                  (h) => h.text !== 'Actions'
+                )"
+                :key="ind"
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-if="item.type === String"
+                  :disabled="!item.editable"
+                  :label="item.text"
+                  v-model="editedItem[item.value]"
+                  :rules="[numberRule]"
+                ></v-text-field>
+                <v-text-field
+                  v-if="item.type === Number"
+                  :disabled="!item.editable"
+                  :label="item.text"
+                  v-model="editedItem[item.value]"
+                ></v-text-field>
+                <v-checkbox
+                  v-if="item.type === Boolean"
+                  :disabled="!item.editable"
+                  :label="item.text"
+                  v-model="editedItem[item.value]"
+                >
+                </v-checkbox>
+                <v-menu
+                  v-if="item.type === Date"
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :return-value.sync="date"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="date"
+                      :label="item.text"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="editedItem[item.value]" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="menu = false">
+                      Cancel
+                    </v-btn>
+                    <v-btn text color="primary" @click="$refs.menu[0].save(date)">
+                      OK
+                    </v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-container>
-        <small>*indicates required field</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -41,26 +90,46 @@
 
 <script>
 export default {
-  props: ["item", "header"],
+  props: ["item", "headers"],
   data: () => ({
+    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    menu: false,
+    valid: false,
     dialog: false,
     editedItem: {},
+    numberRule: function (v) {
+      return /^\d+$/.test(v);
+    },
   }),
   watch: {
     dialog: function (nVal) {
       if (nVal) this.init();
     },
   },
+  updated: function () {
+    if (this.dialog) {
+      this.$refs.form.validate();
+    }
+  },
   methods: {
+    log: function (tt) {
+      tt;
+    },
     init: function () {
       this.editedItem = {
         ...this.item,
       };
+      console.log(this.item)
     },
     editItem: function () {
       // @NOTE: посмотри как прокидывать методы и пропсы через много объектов
-      this.$emit("editItem", this.editedItem);
-      this.dialog = false;
+      if (this.validate()) {
+        this.$emit("editItem", this.editedItem);
+        this.dialog = false;
+      }
+    },
+    validate() {
+      return this.valid;
     },
   },
 };
