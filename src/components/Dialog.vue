@@ -47,14 +47,14 @@
                   ref="menu"
                   v-model="menu"
                   :close-on-content-click="false"
-                  :return-value.sync="date"
+                  :return-value.sync="editedItem[item.value]"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="date"
+                      v-model="editedItem[item.value]"
                       :label="item.text"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -62,7 +62,7 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="editedItem[item.value]" no-title scrollable>
+                  <v-date-picker v-model="date" no-title scrollable>
                     <v-spacer></v-spacer>
                     <v-btn text color="primary" @click="menu = false">
                       Cancel
@@ -92,7 +92,7 @@
 export default {
   props: ["item", "headers"],
   data: () => ({
-    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    date: null,
     menu: false,
     valid: false,
     dialog: false,
@@ -110,6 +110,7 @@ export default {
     if (this.dialog) {
       this.$refs.form.validate();
     }
+    console.log(this.item)
   },
   methods: {
     log: function (tt) {

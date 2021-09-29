@@ -13,6 +13,15 @@
               hide-details
             ></v-text-field>
           </v-col>
+          <v-col md="2" offset="8">
+            <Dialog
+              :item="{id: posts.length+1,parkingAvailable: false}"
+              :headers="headers"
+              @editItem="(newItem) => $emit('newItem', newItem)"
+            >
+              <v-btn dark width="80%"> ADD </v-btn>
+            </Dialog>
+          </v-col>
         </v-row>
         <v-row>
           <v-col>

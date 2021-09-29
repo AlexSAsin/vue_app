@@ -6,6 +6,7 @@
       sort-by="ID"
       @deleteItem="deleteItem"
       @editItem="editItem"
+      @newItem="newItem"
     ></vuetify-datatable>
   </div>
 </template>
@@ -91,6 +92,9 @@ export default {
       console.log(newItem)
       this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
     },
+    newItem(newItem){
+      this.posts = [...this.posts,newItem]
+    }
   },
 };
 </script>
