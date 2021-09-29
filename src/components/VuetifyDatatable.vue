@@ -36,7 +36,6 @@
                 <v-icon small @click="$emit('deleteItem', item.id)"
                   >mdi-delete</v-icon
                 >
-                <!-- @TODO: исправить костыли с emit -->
                 <Dialog
                   :item="item"
                   :headers="headers"

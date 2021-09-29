@@ -123,7 +123,6 @@ export default {
       console.log(this.item)
     },
     editItem: function () {
-      // @NOTE: посмотри как прокидывать методы и пропсы через много объектов
       if (this.validate()) {
         this.$emit("editItem", this.editedItem);
         this.dialog = false;
