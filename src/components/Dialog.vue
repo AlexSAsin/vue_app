@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" persistent max-width="1000px">
     <template v-slot:activator="{ on, attrs }">
       <div class="tt" v-bind="attrs" v-on="on">
         <slot></slot>
@@ -27,12 +27,13 @@
                   :disabled="!item.editable"
                   :label="item.text"
                   v-model="editedItem[item.value]"
-                  :rules="[numberRule]"
+                  
                 ></v-text-field>
                 <v-text-field
                   v-if="item.type === Number"
                   :disabled="!item.editable"
                   :label="item.text"
+                  :rules="[numberRule]"
                   v-model="editedItem[item.value]"
                 ></v-text-field>
                 <v-checkbox

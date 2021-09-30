@@ -15,7 +15,18 @@
           </v-col>
           <v-col md="2" offset="8">
             <Dialog
-              :item="{id: posts.length+1,parkingAvailable: false}"
+              :item="{
+                id: posts.length + 1,
+                parkingAvailable: false,
+                parkingCount: 0,
+                lotType: 0,
+                floorsCount: 0,
+                district: 'default',
+                name: 'default',
+                constructiveType: 'default',
+                inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+                city: 'default'
+              }"
               :headers="headers"
               @editItem="(newItem) => $emit('newItem', newItem)"
             >

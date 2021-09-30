@@ -26,21 +26,22 @@ export default {
         id: 1,
         name: "Корпус 1",
         parkingAvailable: true,
-        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
+        inOperationDate: new Date(
+          Date.now() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0],
         actions: "",
       },
       {
         id: 2,
         name: "Корпус 2",
         parkingAvailable: false,
-        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
-        actions: "",
-      },
-      {
-        id: 3,
-        name: "Корпус 3",
-        parkingAvailable: false,
-        inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0],
+        inOperationDate: new Date(
+          Date.now() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0],
         actions: "",
       },
     ],
@@ -60,7 +61,27 @@ export default {
         editable: true,
         type: String,
       },
-
+      {
+        text: "Floors Count",
+        value: "floorsCount",
+        sortable: true,
+        editable: true,
+        type: Number,
+      },
+      {
+        text: "Lot Type",
+        value: "lotType",
+        sortable: true,
+        editable: true,
+        type: Number,
+      },
+      {
+        text: "In Operation Date",
+        value: "inOperationDate",
+        sortable: false,
+        editable: true,
+        type: Date,
+      },
       {
         text: "Parking Available",
         value: "parkingAvailable",
@@ -69,11 +90,32 @@ export default {
         type: Boolean,
       },
       {
-        text: "In Operation Date",
-        value: "inOperationDate",
-        sortable: false,
+        text: "Parking Count",
+        value: "parkingCount",
+        sortable: true,
         editable: true,
-        type: Date,
+        type: Number,
+      },
+      {
+        text: "Constructive Type",
+        value: "constructiveType",
+        sortable: true,
+        editable: true,
+        type: String,
+      },
+      {
+        text: "District",
+        value: "district",
+        sortable: true,
+        editable: true,
+        type: String,
+      },
+      {
+        text: "City",
+        value: "city",
+        sortable: true,
+        editable: true,
+        type: String,
       },
       {
         text: "Actions",
@@ -89,12 +131,12 @@ export default {
       this.posts = this.posts.filter((p) => p.id !== id);
     },
     editItem(newItem) {
-      console.log(newItem)
+      console.log(newItem);
       this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
     },
-    newItem(newItem){
-      this.posts = [...this.posts,newItem]
-    }
+    newItem(newItem) {
+      this.posts = [...this.posts, newItem];
+    },
   },
 };
 </script>
