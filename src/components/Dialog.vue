@@ -21,6 +21,7 @@
                 cols="12"
                 sm="6"
                 md="4"
+                :v-if="item.ignoreNew"
               >
                 <v-text-field
                   v-if="item.type === String"
@@ -111,7 +112,6 @@ export default {
     if (this.dialog) {
       this.$refs.form.validate();
     }
-    console.log(this.item)
   },
   methods: {
     log: function (tt) {
@@ -121,11 +121,10 @@ export default {
       this.editedItem = {
         ...this.item,
       };
-      console.log(this.item)
     },
     editItem: function () {
       if (this.validate()) {
-        this.$emit("editItem", this.editedItem);
+        this.$emit("editItem", {...this.editedItem, id: undefined}, this.editedItem.id);
         this.dialog = false;
       }
     },

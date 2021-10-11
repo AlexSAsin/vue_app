@@ -16,19 +16,18 @@
           <v-col md="2" offset="8">
             <Dialog
               :item="{
-                id: posts.length + 1,
                 parkingAvailable: false,
                 parkingCount: 0,
                 lotType: 0,
                 floorsCount: 0,
                 district: 'default',
                 name: 'default',
-                constructiveType: 'default',
+                constructiveType: 0,
                 inOperationDate:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
                 city: 'default'
               }"
-              :headers="headers"
-              @editItem="(newItem) => $emit('newItem', newItem)"
+              :headers="headers.filter(h => !h.ignoreNew)"
+              @editItem="(newItem, id) => $emit('newItem', newItem, id)"
             >
               <v-btn dark width="80%"> ADD </v-btn>
             </Dialog>

@@ -13,6 +13,11 @@
 
 <script>
 import VuetifyDatatable from "./components/VuetifyDatatable";
+import axios from "axios";
+
+const dateRegex =
+  /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)$/;
+
 // import Dialog from "./components/Dialog";
 export default {
   name: "App",
@@ -21,30 +26,7 @@ export default {
     // Dialog,
   },
   data: () => ({
-    posts: [
-      {
-        id: 1,
-        name: "Корпус 1",
-        parkingAvailable: true,
-        inOperationDate: new Date(
-          Date.now() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .split("T")[0],
-        actions: "",
-      },
-      {
-        id: 2,
-        name: "Корпус 2",
-        parkingAvailable: false,
-        inOperationDate: new Date(
-          Date.now() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .split("T")[0],
-        actions: "",
-      },
-    ],
+    posts: [],
     headers: [
       {
         text: "ID",
@@ -52,6 +34,7 @@ export default {
         sortable: false,
         editable: false,
         type: Number,
+        ignoreNew: true
       },
 
       {
@@ -127,16 +110,42 @@ export default {
     ],
   }),
   methods: {
-    deleteItem(id) {
+    async deleteItem(id) {
       this.posts = this.posts.filter((p) => p.id !== id);
+      await axios.delete(`http://localhost:3000/posts/${id}`)
+             .then(response => {
+                 console.log(response);
+             });
+
     },
-    editItem(newItem) {
-      console.log(newItem);
-      this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
+    async editItem(newItem, id) {
+      try {
+        await axios.put(`http://localhost:3000/posts/${id}`, newItem);
+        this.posts = this.posts.map((p) => (p.id !== newItem.id ? p : newItem));
+      } catch (e) {
+        this.errors.push(e);
+      }
     },
-    newItem(newItem) {
-      this.posts = [...this.posts, newItem];
+    async newItem(newItem) {
+      try {
+        let response = await axios.post(`http://localhost:3000/posts/`, {
+          ...newItem,
+        });
+        this.posts = [...this.posts, {...response.data, inOperationDate: response.data.inOperationDate.split("T")[0]}];
+      } catch (e) {
+        this.errors.push(e);
+      }
     },
+  },
+  created() {
+    axios.get("http://localhost:3000/posts/").then((response) => {
+      this.posts = response.data.map((p) => {
+        if (dateRegex.test(p.inOperationDate)) {
+          p = { ...p, inOperationDate: p.inOperationDate.split("T")[0] };
+        }
+        return p;
+      });
+    });
   },
 };
 </script>
